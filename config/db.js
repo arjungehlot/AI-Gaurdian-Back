@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     // Connect to MongoDB
-    const conn = await mongoose.connect(process.env.MONGO_URL); // no deprecated options
+    const conn = await mongoose.connect(process.env.MONGO_URI); // no deprecated options
 
     // Show cluster name and host
     console.log(`✅ Database connected successfully: ${conn.connection.name}`);

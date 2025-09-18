@@ -74,6 +74,34 @@ const login = async (req, res) => {
   }
 };
 
+const googleLogin = async (req, res) => {
+  try {
+    // User object Google strategy se aayega (req.user)
+    const user = req.user;
+
+    // Generate JWT tokens (same flow as normal login)
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Google login successful",
+      user: {
+        username: user.username,
+        email: user.email,
+      },
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Google Login error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 const logout = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -112,4 +140,4 @@ const generateApiKey = async (req, res) => {
   }
 };
 
-export { register, login, logout, generateApiKey };
+export { register, login,googleLogin, logout, generateApiKey };
